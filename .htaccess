@@ -1,6 +1,8 @@
-Options +FollowSymLinks
-
 <IfModule mod_rewrite.c>
+	Options -Indexes
+	Options -MultiViews
+	Options +FollowSymLinks
+
 	RewriteEngine On
 	RewriteBase /
 
@@ -9,22 +11,32 @@ Options +FollowSymLinks
 		Deny From All
 	</Files>
 
+	# Use UTF-8 encoding for anything served as `text/html` or `text/plain`.
+	AddDefaultCharset utf-8
+
+	# Force UTF-8 for certain file formats.
+	<IfModule mod_mime.c>
+	    AddCharset utf-8 .atom .css .js .json .jsonld .rss .vtt .webapp .xml
+	</IfModule>
+
 	# Allow asset folders through
 	RewriteRule ^(fuel/modules/(.+)?/assets/(.+)) - [L]
 
 	# Protect application and system files from being viewed
 	RewriteRule ^(fuel/install/.+|fuel/crons/.+|fuel/data_backup/.+|fuel/codeigniter/.+|fuel/modules/.+|fuel/application/.+) - [F,L]
 
-
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-
-	RewriteRule .* index.php/$0 [L]
-	
 	# Prevents access to dot files (.git, .htaccess) - security.
 	RewriteCond %{SCRIPT_FILENAME} -d
 	RewriteCond %{SCRIPT_FILENAME} -f
 	RewriteRule "(^|/)\." - [F]
-	
+
+	# Route all other application requests to index.php
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule .* index.php/$0 [L]
+
+	# Reduces exposure to drive-by download attacks and cross-origin data leaks
+	<IfModule mod_headers.c>
+	    Header set X-Content-Type-Options "nosniff"
+	</IfModule>
 </IfModule>
-Options -Indexes
