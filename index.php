@@ -22,7 +22,7 @@ define('INSTALL_ROOT', str_replace('\\', '/', realpath(dirname(__FILE__))).'/fue
 
 if (defined('STDIN'))
 {
-	/* if your FUEL installation exists in a subfolder, then you may want to change SCRIPT_NAME to /subfolder/index.php 
+	/* if your FUEL installation exists in a subfolder, then you may want to change SCRIPT_NAME to /subfolder/index.php
 	 (Needed for using Tester module if running via CLI) */
 	$_SERVER['SCRIPT_NAME'] = 'index.php';
 	$_SERVER['SERVER_NAME'] = 'localhost';
@@ -51,7 +51,7 @@ if (defined('STDIN'))
  * Be sure to switch from 'development' on a production site!
  *
  */
-	
+
 // automatically set environment based on the values set in the environments config
 @include(INSTALL_ROOT.'application/config/environments.php');
 
@@ -93,18 +93,18 @@ if (!defined('ENVIRONMENT'))
  *---------------------------------------------------------------
  *
  * Different environments will require different levels of error reporting.
- * By default development will show errors but testing and live will hide them.
+ * By default development will show errors but staging and live will hide them.
  */
 
 if (defined('ENVIRONMENT'))
 {
 	switch (ENVIRONMENT)
 	{
-		case 'development': case 'testing': 
+		case 'development': case 'testing':
 			ini_set('display_errors', 1);
 			error_reporting(E_ALL);
 		break;
-	
+
 		case 'staging': case 'production':
 			error_reporting(0);
 		break;
